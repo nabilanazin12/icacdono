@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masjid Donation</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+    p {
+      color: #555;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    label {
+      display: block;
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #555;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    @media (max-width: 500px) {
+      .container { padding: 30px 20px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Support the Masjid</h1>
+    <p>Your donation helps our community thrive. Choose an amount and whether you'd like it monthly or one-time.</p>
+    <form id="donation-form">
+      <input type="number" id="amount" placeholder="Enter amount in USD" required />
+      <label>
+        <input type="checkbox" id="recurring" /> Make this a monthly donation
+      </label>
+      <button type="submit">Donate Now</button>
+    </form>
+  </div>
+  <script>
+    const form = document.getElementById('donation-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const amount = document.getElementById('amount').value * 100;
+      const recurring = document.getElementById('recurring').checked;
+      const res = await fetch('/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount, recurring }),
+      });
+      const data = await res.json();
+      window.location = data.url;
+    });
+  </script>
+</body>
+</html>
